@@ -1,5 +1,5 @@
 ''' 
-Author: Hahn-Schickard-Gesellschaft für angewandte Forschung e.V., Daniel Konegen + Marcus Rueb
+Downloads train and test datasets and writes them into two header files as a 1-dimensional array.
 '''
 
 import tensorflow as tf
@@ -27,11 +27,6 @@ NUM_TRAINING_DATA = args.train   # Max 60000
 NUM_TEST_DATA = args.test       # Max 10000
 
 def generate_train_data():
-    '''
-    Generates two header files. The first one contains as many training data according to the 
-    number defined above. The second header file contains the labels belonging to the training 
-    data. The training data and labels are both stored in a two-dimensional array.
-    '''
 
     with open("MNIST_training_data.h", "w") as f:    
         f.write("float MNIST_training_data[] = {\n")
@@ -56,11 +51,6 @@ def generate_train_data():
 
 
 def generate_test_data():
-    '''
-    Generates two header files. The first one contains as many test data according to the 
-    number defined above. The second header file contains the labels belonging to the test 
-    data. The test data and labels are both stored in a two-dimensional array.
-    '''
 
     with open("MNIST_test_data.h", "w") as f:    
         f.write("float MNIST_test_data[] = {\n")
