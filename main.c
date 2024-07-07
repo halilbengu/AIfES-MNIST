@@ -107,7 +107,7 @@ void AIfES_mnist()
 	aialgo_initialize_parameters_model(&model);
     aiopti_t *optimizer;
 
-	aiopti_adam_f32_t adam_opti = AIOPTI_ADAM_F32(0.01f, 0.9f, 0.999f, 1e-8f);
+	aiopti_adam_f32_t adam_opti = AIOPTI_ADAM_F32(0.01f, 0.9f, 0.999f, 1e-6f);
 	optimizer = aiopti_adam_f32_default(&adam_opti);
 
 	// -------------------------------- Allocate and schedule the working memory for training ---------
@@ -147,7 +147,7 @@ void AIfES_mnist()
     }
     clock_t end = clock();
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-    printf("Training Time: %f", time_spent);
+    printf("Training Time in seconds: %f (Includes test data inference for success rate calculation)", time_spent);
 
 	// ----------------------------------------- Evaluate the trained model --------------------------
 	printf("\nResults after training:\n");
