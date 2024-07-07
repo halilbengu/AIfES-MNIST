@@ -7,4 +7,4 @@ It is also possible to set arguments for the script
 
 > ./build_and_run.sh $TrainingSize $TestSize $BatchSize $EpochNum
 
-Default values are 1000 100 100 3 due to high training times.
+Default values are 3000 500 100 3 due to high training times.
