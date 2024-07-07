@@ -19,10 +19,6 @@ void AIfES_mnist()
     int training_size = sizeof(MNIST_training_data) / sizeof(MNIST_training_data[0]) / (28*28);
     int test_size = sizeof(MNIST_test_data) / sizeof(MNIST_test_data[0]) / (28*28);
 
-    printf("Training Data Size: %lu\n", training_size);
-    printf("Test Data Size for: %lu\n", test_size);
-    printf("Batch Size: %d\n", BATCH_SIZE);
-
     uint32_t i;
     uint16_t input_shape[] = {training_size, 1, 28, 28}; // [sample count, channels, height, width]
     aitensor_t input_tensor = AITENSOR_4D_F32(input_shape, MNIST_training_data);
@@ -42,7 +38,7 @@ void AIfES_mnist()
 	uint16_t input_layer_shape[]            = {BATCH_SIZE, 1, 28, 28}; // [batch-size, channels, height, width] <- channels first format
 	ailayer_input_f32_t input_layer         = AILAYER_INPUT_F32_A(4, input_layer_shape);
 	ailayer_conv2d_t conv2d_layer_1         = AILAYER_CONV2D_F32_A(
-                                                                     /* filters =*/     16,
+                                                                     /* filters =*/     8,
                                                                      /* kernel_size =*/ HW(5, 5),
                                                                      /* stride =*/      HW(1, 1),
                                                                      /* dilation =*/    HW(1, 1),
@@ -56,7 +52,7 @@ void AIfES_mnist()
                                                                      /* padding =*/     HW(0, 0)
                                                                     );
 	ailayer_conv2d_t conv2d_layer_2         = AILAYER_CONV2D_F32_A(
-                                                                     /* filters =*/     32,
+                                                                     /* filters =*/     16,
                                                                      /* kernel_size =*/ HW(5, 5),
                                                                      /* stride =*/      HW(1, 1),
                                                                      /* dilation =*/    HW(1, 1),
@@ -111,7 +107,7 @@ void AIfES_mnist()
 	aialgo_initialize_parameters_model(&model);
     aiopti_t *optimizer;
 
-	aiopti_adam_f32_t adam_opti = AIOPTI_ADAM_F32(0.001f, 0.9f, 0.999f, 1e-8f);
+	aiopti_adam_f32_t adam_opti = AIOPTI_ADAM_F32(0.01f, 0.9f, 0.999f, 1e-8f);
 	optimizer = aiopti_adam_f32_default(&adam_opti);
 
 	// -------------------------------- Allocate and schedule the working memory for training ---------
@@ -135,6 +131,10 @@ void AIfES_mnist()
 	float loss;
 
     printf("----- Start training ----- \n");
+    printf("Training Data Size: %d\n", training_size);
+    printf("Test Data Size for: %d\n", test_size);
+    printf("Batch Size: %d\n", BATCH_SIZE);
+    clock_t begin = clock();
     for(i = 0; i < EPOCHS; i++)
     {
         // One epoch of training. Iterates through the whole data once
@@ -145,6 +145,9 @@ void AIfES_mnist()
         aialgo_inference_model(&model, &test_tensor, &output_tensor);
         calc_success_rate(output_data, test_size);
     }
+    clock_t end = clock();
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    printf("Training Time: %f", time_spent);
 
 	// ----------------------------------------- Evaluate the trained model --------------------------
 	printf("\nResults after training:\n");
